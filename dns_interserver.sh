@@ -5,6 +5,14 @@
 
 INTERSERVER_API="https://my.interserver.net/apiv2"
 
+# Check API key
+if [ -z "$INTERSERVER_API_KEY" ] || [ "${#INTERSERVER_API_KEY}" -lt 12 ]; then
+  _err "INTERSERVER_API_KEY is not set or too short."
+  return 1
+else
+  _info "INTERSERVER_API_KEY is set (${INTERSERVER_API_KEY:0:4}...${INTERSERVER_API_KEY: -4})"
+fi
+
 ########  Public functions  ########
 
 dns_interserver_add() {
