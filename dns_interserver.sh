@@ -5,13 +5,26 @@
 
 INTERSERVER_API="https://my.interserver.net/apiv2"
 
-# Check API key
-if [ -z "$INTERSERVER_API_KEY" ] || [ "${#INTERSERVER_API_KEY}" -lt 12 ]; then
-  _err "INTERSERVER_API_KEY is not set or too short."
+##### Validate INTERSERVER_API_KEY environment variable #####
+
+case "$INTERSERVER_API_KEY" in
+  "") _err "INTERSERVER_API_KEY is not set."; return 1 ;;
+esac
+
+# Use printf to get the length in a POSIX-compliant way
+_key_length=$(printf %s "$INTERSERVER_API_KEY" | wc -c | tr -d ' ')
+
+if [ "$_key_length" -lt 12 ]; then
+  _err "INTERSERVER_API_KEY is too short ($INTERSERVER_API_KEY)"
   return 1
-else
-  _info "INTERSERVER_API_KEY is set (${INTERSERVER_API_KEY:0:4}...${INTERSERVER_API_KEY: -4})"
 fi
+
+# Extract first 4 and last 4 chars manually
+_first4=$(printf %s "$INTERSERVER_API_KEY" | cut -c1-4)
+_last4=$(printf %s "$INTERSERVER_API_KEY" | rev | cut -c1-4 | rev)
+
+_info "INTERSERVER_API_KEY is set (${_first4}...${_last4}) and has a length of ${_key_length}."
+
 
 ########  Public functions  ########
 
