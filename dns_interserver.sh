@@ -102,8 +102,23 @@ _rest() {                                  # $1=METHOD $2=URL [$3=BODY]
 }
 
 _exec_curl() {
-  curl -sS -X "$1" \
-       -H "X-API-KEY: $INTERSERVER_API_KEY" \
-       -H "Content-Type: application/json" \
-       ${3:+-d "$3"} "$2"
+  _method="$1"
+  _url="$2"
+  _body="$3"
+
+  _debug "Executing curl: $_method $_url"
+
+  if [ -n "$_body" ]; then
+    _debug "Sending body: $_body"
+    curl -sS -X "$_method" \
+         -H "X-API-KEY: $INTERSERVER_API_KEY" \
+         -H "Content-Type: application/json" \
+         --data "$_body" \
+         "$_url"
+  else
+    curl -sS -X "$_method" \
+         -H "X-API-KEY: $INTERSERVER_API_KEY" \
+         -H "Content-Type: application/json" \
+         "$_url"
+  fi
 }
