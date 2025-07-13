@@ -7,6 +7,10 @@ INTERSERVER_API="https://my.interserver.net/apiv2"
 
 ##### Validate INTERSERVER_API_KEY environment variable #####
 
+# Load API key from acme.sh config if available
+[ -f "$HOME/.acme.sh/account.conf" ] && . "$HOME/.acme.sh/account.conf"
+[ -f "/acme.sh/account.conf" ] && . "/acme.sh/account.conf"
+
 case "$INTERSERVER_API_KEY" in
   "") _err "INTERSERVER_API_KEY is not set."; return 1 ;;
 esac
